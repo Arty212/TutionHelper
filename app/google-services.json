@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "300523822403",
+    "firebase_url": "https://demon-slayer-53618.firebaseio.com",
+    "project_id": "demon-slayer-53618",
+    "storage_bucket": "demon-slayer-53618.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:300523822403:android:ce4b0b2043dbcaea",
+        "android_client_info": {
+          "package_name": "skippie.tutionhelper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "300523822403-vngpm4n2t98gcbvlpvq6i8nt6q41d93e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "skippie.tutionhelper",
+            "certificate_hash": "5c73f231adca638278f32efb2457f6075fe025cf"
+          }
+        },
+        {
+          "client_id": "300523822403-ijsv2cu00ar63gvk9rbtdu35o3nlatlv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe3j27BxeZQiXWoCCHc39UxzZFmzaKzuo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "300523822403-ijsv2cu00ar63gvk9rbtdu35o3nlatlv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
