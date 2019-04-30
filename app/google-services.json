@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "300523822403",
-    "firebase_url": "https://demon-slayer-53618.firebaseio.com",
-    "project_id": "demon-slayer-53618",
-    "storage_bucket": "demon-slayer-53618.appspot.com"
+    "project_number": "922997708566",
+    "firebase_url": "https://tuition-helper-b576d.firebaseio.com",
+    "project_id": "tuition-helper-b576d",
+    "storage_bucket": "tuition-helper-b576d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:300523822403:android:ce4b0b2043dbcaea",
+        "mobilesdk_app_id": "1:922997708566:android:ce4b0b2043dbcaea",
         "android_client_info": {
           "package_name": "skippie.tutionhelper"
         }
       },
       "oauth_client": [
         {
-          "client_id": "300523822403-vngpm4n2t98gcbvlpvq6i8nt6q41d93e.apps.googleusercontent.com",
+          "client_id": "922997708566-gl9o19lo0bol2l5quddv8a3g72skc74l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "skippie.tutionhelper",
@@ -23,20 +23,28 @@
           }
         },
         {
-          "client_id": "300523822403-ijsv2cu00ar63gvk9rbtdu35o3nlatlv.apps.googleusercontent.com",
+          "client_id": "922997708566-g4hs6sstfhph5k8hjm2ht3g09qgp0l3k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "skippie.tutionhelper",
+            "certificate_hash": "cd625f67962ef774e2f6250fe8cfee3a102b01eb"
+          }
+        },
+        {
+          "client_id": "922997708566-hnvj3jr7c82qkakai6aik75fcjor1ni9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBe3j27BxeZQiXWoCCHc39UxzZFmzaKzuo"
+          "current_key": "AIzaSyCe1hWZ18nUvgmdtCyOYhT5Glg5QQ1HlGs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "300523822403-ijsv2cu00ar63gvk9rbtdu35o3nlatlv.apps.googleusercontent.com",
+              "client_id": "922997708566-hnvj3jr7c82qkakai6aik75fcjor1ni9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

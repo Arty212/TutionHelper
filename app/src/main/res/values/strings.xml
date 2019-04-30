@@ -5,4 +5,5 @@
     <string name="sign_in_button_string">Sign in</string>
     <string name="sign_up_button_string">Sign up</string>
     <string name="sign_in_activity_name_string">Sign in your account or create a new one</string>
+    <string name="TAG">Log tag</string>
 </resources>
