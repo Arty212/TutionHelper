@@ -14,6 +14,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity{
 
@@ -22,6 +26,7 @@ public class SignUpActivity extends AppCompatActivity{
 
     private FirebaseAuth FB_Auth;
     private FirebaseUser FB_User;
+    private FirebaseFirestore FB_Firestore;
 
     private TextView TV_error;
 
@@ -42,6 +47,7 @@ public class SignUpActivity extends AppCompatActivity{
 
         FB_Auth = FirebaseAuth.getInstance();
         FB_User = FB_Auth.getCurrentUser();
+        FB_Firestore = FirebaseFirestore.getInstance();
 
         TV_error = findViewById(R.id.SignUp_errorTextView);
 
@@ -71,7 +77,14 @@ public class SignUpActivity extends AppCompatActivity{
                                 if(task.isSuccessful()){
 
                                     FB_User = FB_Auth.getCurrentUser();
-                                    FirebaseAuth.getInstance().signOut();
+
+                                    Map<String, Object> user = new HashMap<>();
+                                    user.put("name", FB_User.getDisplayName());
+                                    user.put("email", FB_User.getEmail());
+                                    user.put("isTeacher", false);
+
+                                    FB_Firestore.collection("users").document(FB_User.getUid())
+                                    .set(user);
 
 
                                 }else{
