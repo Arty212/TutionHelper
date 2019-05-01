@@ -9,11 +9,13 @@
     <string name="sign_up_button_string">Sign up</string>
     <string name="sign_in_activity_name_string">Sign in your account or create a new one</string>
     <string name="sign_up_error_password_illegal_size">Your password should be 6&#8211;12 characters long</string>
-    <string name="sign_in_error_fields_empty">Please enter your email and password</string>
+    <string name="sign_in_error_fields_empty">All fields should be filled</string>
     <string name="sign_in_error_incorrect_credentials">Either email or password are incorrect</string>
 
     <string name="sign_up_error_unable_to_complete">Unable to complete operation</string>
 
-    <string name="TAG_SYSTEM_DEBUG">TuitionHelper System</string>
-    <string name="TAG_FIREBASE_DEBUG">TuitionHelper Firebase</string>
+    <string name="TAG_DEBUG">TuitionHelper Debug</string>
+    <string name="TAG_FIREBASE">TuitionHelper Firebase</string>
+    <string name="TAG_INFO">TuitionHelper Info</string>
+    <string name="TAG_ERROR">TuitionHelper Error</string>
 </resources>
