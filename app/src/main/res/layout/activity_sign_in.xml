@@ -100,33 +100,6 @@
             android:text="@string/sign_up_button_string"
             android:theme="@style/AppTheme" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/SignInActivity_googleSignInButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp" />
-
-            <ImageButton
-                android:id="@+id/SignInActivity_facebookSignInButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp" />
-
-            <ImageButton
-                android:id="@+id/SignInActivity_twitterSignInButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp" />
-
-        </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

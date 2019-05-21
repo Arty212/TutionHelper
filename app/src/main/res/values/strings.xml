@@ -3,19 +3,19 @@
 
     <string name="email_string">Email</string>
     <string name="username_string">Name</string>
+    <string name="tutor_string">Tutor</string>
+    <string name="student_string">Student</string>
+
     <string name="sign_in_password_string">Password</string>
-    <string name="sign_up_password_string">Password (6&#8211;12 characters)</string>
     <string name="sign_in_button_string">Sign in</string>
-    <string name="sign_up_button_string">Sign up</string>
     <string name="sign_in_activity_name_string">Sign in your account or create a new one</string>
-    <string name="sign_up_error_password_illegal_size">Your password should be 6&#8211;12 characters long</string>
     <string name="sign_in_error_fields_empty">All fields should be filled</string>
     <string name="sign_in_error_incorrect_credentials">Either email or password are incorrect</string>
 
+    <string name="sign_up_password_string">Password (6&#8211;12 characters)</string>
+    <string name="sign_up_button_string">Sign up</string>
+    <string name="sign_up_error_password_illegal_size">Your password should be 6&#8211;12 characters long</string>
     <string name="sign_up_error_unable_to_complete">Unable to complete operation</string>
+    <string name="sign_up_error_type_is_not_chosen">Please choose your account type</string>
 
-    <string name="TAG_DEBUG">TuitionHelper Debug</string>
-    <string name="TAG_FIREBASE">TuitionHelper Firebase</string>
-    <string name="TAG_INFO">TuitionHelper Info</string>
-    <string name="TAG_ERROR">TuitionHelper Error</string>
 </resources>

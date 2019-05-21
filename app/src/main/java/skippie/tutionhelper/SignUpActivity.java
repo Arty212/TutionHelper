@@ -1,5 +1,6 @@
 package skippie.tutionhelper;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,9 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,10 +24,9 @@ import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity{
 
-    private String TAG_DEBUG;
-    private String TAG_FIREBASE;
-    private String TAG_ERROR;
-    private String TAG_INFO;
+    private Intent MainActivityIntent;
+
+    private String isTeacher = "";
 
     private FirebaseAuth FB_Auth;
     private FirebaseUser FB_User;
@@ -41,17 +40,13 @@ public class SignUpActivity extends AppCompatActivity{
 
     private Button BT_signUp;
 
-    private ImageButton BT_googleSignUp;
+    private RadioButton RB_student;
+    private RadioButton RB_tutor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
-        TAG_DEBUG = getText(R.string.TAG_DEBUG).toString();
-        TAG_FIREBASE = getText(R.string.TAG_FIREBASE).toString();
-        TAG_ERROR = getText(R.string.TAG_ERROR).toString();
-        TAG_INFO = getText(R.string.TAG_INFO).toString();
-
-        Log.d(TAG_DEBUG, "Started creating SignUpActivity...");
+        Log.d(TuitionHelper.TAG_DEBUG, "Started creating SignUpActivity...");
 
 
         super.onCreate(savedInstanceState);
@@ -63,12 +58,12 @@ public class SignUpActivity extends AppCompatActivity{
 
         setOnListeners();
 
-        Log.d(TAG_DEBUG, "Completed creating SignUpActivity");
+        Log.d(TuitionHelper.TAG_DEBUG, "Completed creating SignUpActivity");
     }
 
     private void initializeFirebase(){
 
-        Log.d(TAG_FIREBASE, "Started initializing Firebase and it's components");
+        Log.d(TuitionHelper.TAG_FIREBASE, "Started initializing Firebase and it's components");
 
 
         FB_Auth = FirebaseAuth.getInstance();
@@ -76,38 +71,41 @@ public class SignUpActivity extends AppCompatActivity{
         FB_Firestore = FirebaseFirestore.getInstance();
 
 
-        Log.d(TAG_FIREBASE, "Completed initializing Firebase and it's components");
+        Log.d(TuitionHelper.TAG_FIREBASE, "Completed initializing Firebase and it's components");
     }
 
     private void initializeComponents(){
 
-        Log.d(TAG_DEBUG, "Started initializing components..");
+        Log.d(TuitionHelper.TAG_DEBUG, "Started initializing components..");
+
+        MainActivityIntent = new Intent(this, MainActivity.class);
+
+        TV_error = findViewById(R.id.SignUpActivity_errorTextView);
+
+        ET_name = findViewById(R.id.SignUpActivity_usernameEditText);
+        ET_email = findViewById(R.id.SignUpActivity_emailEditText);
+        ET_password = findViewById(R.id.SignUpActivity_passwordEditText);
+
+        BT_signUp = findViewById(R.id.SignUpActivity_signUpButton);
+
+        RB_student = findViewById(R.id.SignUpActivity_studentRadioButton);
+        RB_tutor = findViewById(R.id.SignUpActivity_tutorRadioButton);
 
 
-        TV_error = findViewById(R.id.SignUp_errorTextView);
-
-        ET_name = findViewById(R.id.SignUp_usernameEditText);
-        ET_email = findViewById(R.id.SignUp_emailEditText);
-        ET_password = findViewById(R.id.SignUp_passwordEditText);
-
-        BT_signUp = findViewById(R.id.SignUp_signUpButton);
-
-
-        Log.d(TAG_DEBUG, "Completed initializing components");
+        Log.d(TuitionHelper.TAG_DEBUG, "Completed initializing components");
     }
 
     private void setOnListeners(){
 
+        Log.d(TuitionHelper.TAG_DEBUG, "Started setting buttons on listeners...");
 
-        Log.d(TAG_DEBUG, "Started setting buttons on listeners...");
 
         BT_signUp.setOnClickListener(new View.OnClickListener(){
-
 
             @Override
             public void onClick(View v){
 
-                Log.d(TAG_DEBUG, "Sign up button clicked");
+                Log.d(TuitionHelper.TAG_DEBUG, "Sign up button clicked");
 
 
                 TV_error.setVisibility(View.INVISIBLE);
@@ -116,7 +114,9 @@ public class SignUpActivity extends AppCompatActivity{
                 String email = ET_email.getText().toString();
                 String password = ET_password.getText().toString();
 
-                if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && password.length() >= 6 && password.length() <= 12){
+                if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && password.length() >= 6 && password.length() <= 12 && !isTeacher.isEmpty()){
+
+                    BT_signUp.setClickable(false);
 
                     tryCreateUserWithEmailAndPassword(email, password, name);
 
@@ -127,8 +127,16 @@ public class SignUpActivity extends AppCompatActivity{
                     TV_error.setVisibility(View.VISIBLE);
 
 
-                    Log.e(TAG_ERROR, "One or more fields are empty, sign up attempt rejected");
+                    Log.e(TuitionHelper.TAG_ERROR, "One or more fields are empty, sign up attempt rejected");
 
+                }
+                else if(isTeacher.isEmpty()){
+
+                    TV_error.setText(R.string.sign_up_error_type_is_not_chosen);
+                    TV_error.setVisibility(View.VISIBLE);
+
+
+                    Log.e(TuitionHelper.TAG_ERROR, "User type is not chosen, sign up attempt rejected");
                 }
                 else{
 
@@ -136,7 +144,7 @@ public class SignUpActivity extends AppCompatActivity{
                     TV_error.setVisibility(View.VISIBLE);
 
 
-                    Log.e(TAG_ERROR, "Illegal password length, sign up attempt rejected");
+                    Log.e(TuitionHelper.TAG_ERROR, "Illegal password length, sign up attempt rejected");
 
                 }
 
@@ -144,22 +152,36 @@ public class SignUpActivity extends AppCompatActivity{
 
         });
 
+        RB_tutor.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+            }
+        });
+
+        RB_student.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+            }
+        });
+
+
     }
 
-
-    private void tryCreateUserWithEmailAndPassword(final String email, String password, final String displayName){
+    private void tryCreateUserWithEmailAndPassword(final String email, final String password, final String displayName){
         FB_Auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(@NonNull Task<AuthResult> task){
 
-                Log.d(TAG_DEBUG, "Trying to create a new Firebase user...");
+                Log.d(TuitionHelper.TAG_DEBUG, "Trying to create a new Firebase user...");
 
 
                 if(task.isSuccessful()){
 
                     FB_User = FirebaseAuth.getInstance().getCurrentUser();
 
-                    FB_User.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(ET_name.getText().toString()).build())
+                    FB_User.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(displayName).build())
                             .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<Void>(){
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task){
@@ -173,8 +195,16 @@ public class SignUpActivity extends AppCompatActivity{
                                             .set(user);
 
 
-                                    Log.d(TAG_DEBUG, "New Firebase user successfully created");
-                                    Log.i(TAG_INFO, String.format("\nUser\nName:\t%s\nEmail:\t%s\nUID:\t%s", FB_User.getDisplayName(), FB_User.getEmail(), FB_User.getUid()));
+                                    Log.d(TuitionHelper.TAG_DEBUG, "New Firebase user successfully created");
+                                    Log.i(TuitionHelper.TAG_INFO, String.format(" \nUser\nName:\t%s\nEmail:\t%s\nUID:\t%s", FB_User.getDisplayName(), FB_User.getEmail(), FB_User.getUid()));
+
+
+                                    BT_signUp.setClickable(true);
+
+                                    MainActivityIntent.putExtra("Email", email);
+                                    MainActivityIntent.putExtra("Password", password);
+
+                                    startActivity(MainActivityIntent);
                                 }
                             });
 
@@ -186,8 +216,10 @@ public class SignUpActivity extends AppCompatActivity{
                     TV_error.setText(R.string.sign_up_error_unable_to_complete);
                     TV_error.setVisibility(View.VISIBLE);
 
+                    BT_signUp.setClickable(true);
 
-                    Log.e(TAG_ERROR, "Failed to create new Firebase user");
+
+                    Log.e(TuitionHelper.TAG_FIREBASE, "Failed to create new Firebase user");
 
                 }
 

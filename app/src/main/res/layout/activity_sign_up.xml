@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="5">
 
     <ImageView
         android:layout_width="match_parent"
@@ -10,6 +13,7 @@
         android:layout_margin="8dp"
         android:layout_weight="1"
         android:scaleType="centerInside"
+        android:visibility="visible"
         app:srcCompat="@drawable/ic_app_logo_big" />
 
     <LinearLayout
@@ -17,10 +21,11 @@
         android:layout_height="0dp"
         android:layout_weight="4"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="5">
 
         <EditText
-            android:id="@+id/SignUp_usernameEditText"
+            android:id="@+id/SignUpActivity_usernameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
@@ -30,10 +35,11 @@
             android:ems="10"
             android:hint="@string/username_string"
             android:inputType="textEmailAddress"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:visibility="visible" />
 
         <EditText
-            android:id="@+id/SignUp_emailEditText"
+            android:id="@+id/SignUpActivity_emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
@@ -43,10 +49,11 @@
             android:ems="10"
             android:hint="@string/email_string"
             android:inputType="textEmailAddress"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:visibility="visible" />
 
         <EditText
-            android:id="@+id/SignUp_passwordEditText"
+            android:id="@+id/SignUpActivity_passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
@@ -56,10 +63,32 @@
             android:ems="10"
             android:hint="@string/sign_up_password_string"
             android:inputType="textPassword"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:visibility="visible" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/SignUpActivity_studentRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/student_string" />
+
+            <RadioButton
+                android:id="@+id/SignUpActivity_tutorRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tutor_string" />
+        </RadioGroup>
 
         <TextView
-            android:id="@+id/SignUp_errorTextView"
+            android:id="@+id/SignUpActivity_errorTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -71,39 +100,17 @@
             android:visibility="invisible" />
 
         <Button
-            android:id="@+id/SignUp_signUpButton"
+            android:id="@+id/SignUpActivity_signUpButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="64dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="64dp"
             android:layout_marginBottom="8dp"
-            android:text="@string/sign_up_button_string" />
+            android:backgroundTintMode="src_atop"
+            android:longClickable="false"
+            android:text="@string/sign_up_button_string"
+            android:visibility="visible" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center|center_horizontal|center_vertical"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/SignInActivity_googleSignInButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp" />
-
-            <ImageButton
-                android:id="@+id/SignInActivity_facebookSignInButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp" />
-
-            <ImageButton
-                android:id="@+id/SignInActivity_twitterSignInButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp" />
-
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

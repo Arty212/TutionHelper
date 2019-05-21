@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,11 +17,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignInActivity extends AppCompatActivity{
-
-    private String TAG_DEBUG;
-    private String TAG_FIREBASE;
-    private String TAG_INFO;
-    private String TAG_ERROR;
 
     private FirebaseAuth FB_Auth;
     private FirebaseUser FB_User;
@@ -35,21 +29,12 @@ public class SignInActivity extends AppCompatActivity{
     private Button BT_signIn;
     private Button BT_signUp;
 
-    private ImageButton BT_googleSignIn;
-    private ImageButton BT_facebookSignIn;
-    private ImageButton BT_twitterSignIn;
-
     private Intent SignUpActivityIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
-        TAG_DEBUG = getText(R.string.TAG_DEBUG).toString();
-        TAG_FIREBASE = getText(R.string.TAG_FIREBASE).toString();
-        TAG_INFO = getText(R.string.TAG_INFO).toString();
-        TAG_ERROR = getText(R.string.TAG_ERROR).toString();
-
-        Log.d(TAG_DEBUG, "Started creating SignInActivity...");
+        Log.d(TuitionHelper.TAG_DEBUG, "Started creating SignInActivity...");
 
 
         super.onCreate(savedInstanceState);
@@ -58,25 +43,25 @@ public class SignInActivity extends AppCompatActivity{
         initializeComponents();
 
 
-        Log.d(TAG_DEBUG, "Started initializing Firebase and it's components");
+        Log.d(TuitionHelper.TAG_DEBUG, "Started initializing Firebase and it's components");
 
 
         FB_Auth = FirebaseAuth.getInstance();
 
 
-        Log.d(TAG_DEBUG, "Completed initializing Firebase");
+        Log.d(TuitionHelper.TAG_DEBUG, "Completed initializing Firebase");
 
 
         setOnListeners();
 
 
-        Log.d(TAG_DEBUG, "SignInActivity created successfully");
+        Log.d(TuitionHelper.TAG_DEBUG, "SignInActivity created successfully");
 
     }
 
     private void initializeComponents(){
 
-        Log.d(TAG_DEBUG, "Started initializing Buttons and EditTexts...");
+        Log.d(TuitionHelper.TAG_DEBUG, "Started initializing Buttons and EditTexts...");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -88,15 +73,11 @@ public class SignInActivity extends AppCompatActivity{
         BT_signIn = findViewById(R.id.SignInActivity_signInButton);
         BT_signUp = findViewById(R.id.SignInActivity_signUpButton);
 
-        BT_googleSignIn = findViewById(R.id.SignInActivity_googleSignInButton);
-        BT_facebookSignIn = findViewById(R.id.SignInActivity_facebookSignInButton);
-        BT_twitterSignIn = findViewById(R.id.SignInActivity_twitterSignInButton);
-
         SignUpActivityIntent = new Intent(this, SignUpActivity.class);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        Log.d(TAG_DEBUG, "Completed initializing Buttons and EditTexts");
+        Log.d(TuitionHelper.TAG_DEBUG, "Completed initializing Buttons and EditTexts");
 
     }
 
@@ -104,7 +85,7 @@ public class SignInActivity extends AppCompatActivity{
 
     private void setOnListeners(){
 
-        Log.d(TAG_DEBUG, "Started setting Buttons on click listeners...");
+        Log.d(TuitionHelper.TAG_DEBUG, "Started setting Buttons on click listeners...");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -114,7 +95,7 @@ public class SignInActivity extends AppCompatActivity{
             @Override
             public void onClick(View v){
 
-                Log.d(TAG_DEBUG, "Sign in button clicked");
+                Log.d(TuitionHelper.TAG_DEBUG, "Sign in button clicked");
 
 
                 TV_error.setVisibility(View.INVISIBLE); //Resetting visibility of TextView on each click
@@ -122,11 +103,11 @@ public class SignInActivity extends AppCompatActivity{
                 String email = ET_email.getText().toString();
                 String password = ET_password.getText().toString();
 
-                Log.d(TAG_DEBUG, "Checking fields");
+                Log.d(TuitionHelper.TAG_DEBUG, "Checking fields...");
 
                 if(!email.isEmpty() && !password.isEmpty()){
 
-                    Log.d(TAG_FIREBASE, "Trying to sign in Firebase using email and password...");
+                    Log.d(TuitionHelper.TAG_FIREBASE, "Trying to sign in Firebase using email and password...");
 
 
                     FB_Auth.signInWithEmailAndPassword(email, password)
@@ -136,13 +117,13 @@ public class SignInActivity extends AppCompatActivity{
 
                                     if(task.isSuccessful()){
 
-                                        Log.d(TAG_FIREBASE, "Signed in Firebase successfully");
+                                        Log.d(TuitionHelper.TAG_FIREBASE, "Signed in Firebase successfully");
 
 
                                         FB_User = FB_Auth.getCurrentUser();
 
 
-                                        Log.i(TAG_INFO, String.format("\nUser\nEmail: %s\nUID: %s", FB_User.getEmail(), FB_User.getUid()));
+                                        Log.i(TuitionHelper.TAG_FIREBASE, String.format("\nUser\nEmail: %s\nUID: %s", FB_User.getEmail(), FB_User.getUid()));
 
                                     }else{
 
@@ -150,7 +131,7 @@ public class SignInActivity extends AppCompatActivity{
                                         TV_error.setVisibility(View.VISIBLE);
 
 
-                                        Log.e(TAG_ERROR, "Sign in attempt failed");
+                                        Log.e(TuitionHelper.TAG_ERROR, "Sign in attempt failed");
 
                                     }
 
@@ -165,7 +146,7 @@ public class SignInActivity extends AppCompatActivity{
                     TV_error.setVisibility(View.VISIBLE);
 
 
-                    Log.e(TAG_ERROR, "Field is empty, sign in attempt rejected");
+                    Log.e(TuitionHelper.TAG_ERROR, "Field is empty, sign in attempt rejected");
 
                 }
 
@@ -179,7 +160,7 @@ public class SignInActivity extends AppCompatActivity{
             @Override
             public void onClick(View v){
 
-                Log.d(TAG_DEBUG, "Sign up button clicked");
+                Log.d(TuitionHelper.TAG_DEBUG, "Sign up button clicked");
 
                 startActivity(SignUpActivityIntent);
 
@@ -187,42 +168,9 @@ public class SignInActivity extends AppCompatActivity{
 
         });
 
-        //Google sign in button listener
-        BT_googleSignIn.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v){
-
-                Log.d(TAG_DEBUG, "Google sign in button clicked");
-
-
-            }
-
-        });
-
-        //Facebook sign in button listener
-        BT_facebookSignIn.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v){
-
-            }
-
-        });
-
-        //Twitter sign in button listener
-        BT_twitterSignIn.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v){
-
-            }
-
-        });
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        Log.d(TAG_DEBUG, "Completed setting Buttons on click listeners");
+        Log.d(TuitionHelper.TAG_DEBUG, "Completed setting Buttons on click listeners");
 
     }
 
