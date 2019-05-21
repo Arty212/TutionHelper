@@ -155,14 +155,14 @@ public class SignUpActivity extends AppCompatActivity{
         RB_tutor.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
+                isTeacher = "true";
             }
         });
 
         RB_student.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
+                isTeacher = "false";
             }
         });
 
