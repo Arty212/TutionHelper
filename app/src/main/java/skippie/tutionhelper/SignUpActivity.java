@@ -26,7 +26,7 @@ public class SignUpActivity extends AppCompatActivity{
 
     private Intent MainActivityIntent;
 
-    private String isTeacher = "";
+    private boolean isTeacher;
 
     private FirebaseAuth FB_Auth;
     private FirebaseUser FB_User;
@@ -108,13 +108,18 @@ public class SignUpActivity extends AppCompatActivity{
                 Log.d(TuitionHelper.TAG_DEBUG, "Sign up button clicked");
 
 
+                if(RB_student.isChecked())
+                    isTeacher = false;
+                if(RB_tutor.isChecked())
+                    isTeacher = true;
+
                 TV_error.setVisibility(View.INVISIBLE);
 
                 String name = ET_name.getText().toString();
                 String email = ET_email.getText().toString();
                 String password = ET_password.getText().toString();
 
-                if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && password.length() >= 6 && password.length() <= 12 && !isTeacher.isEmpty()){
+                if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && password.length() >= 6 && password.length() <= 12 && (RB_student.isChecked() || RB_tutor.isChecked())){
 
                     BT_signUp.setClickable(false);
 
@@ -130,7 +135,7 @@ public class SignUpActivity extends AppCompatActivity{
                     Log.e(TuitionHelper.TAG_ERROR, "One or more fields are empty, sign up attempt rejected");
 
                 }
-                else if(isTeacher.isEmpty()){
+                else if(!(RB_student.isChecked() || RB_tutor.isChecked())){
 
                     TV_error.setText(R.string.sign_up_error_type_is_not_chosen);
                     TV_error.setVisibility(View.VISIBLE);
@@ -155,14 +160,14 @@ public class SignUpActivity extends AppCompatActivity{
         RB_tutor.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                isTeacher = "true";
+                isTeacher = true;
             }
         });
 
         RB_student.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                isTeacher = "false";
+                isTeacher = false;
             }
         });
 
