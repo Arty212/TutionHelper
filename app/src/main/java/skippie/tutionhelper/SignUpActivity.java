@@ -123,7 +123,7 @@ public class SignUpActivity extends AppCompatActivity{
 
                     BT_signUp.setClickable(false);
 
-                    tryCreateUserWithEmailAndPassword(email, password, name);
+                    tryCreateUserWithEmailAndPassword(email, password, name, isTeacher);
 
                 }
                 else if(name.isEmpty() || email.isEmpty() || password.isEmpty()){
@@ -174,7 +174,7 @@ public class SignUpActivity extends AppCompatActivity{
 
     }
 
-    private void tryCreateUserWithEmailAndPassword(final String email, final String password, final String displayName){
+    private void tryCreateUserWithEmailAndPassword(final String email, final String password, final String displayName, final boolean isTeacher){
         FB_Auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(@NonNull Task<AuthResult> task){
@@ -194,20 +194,18 @@ public class SignUpActivity extends AppCompatActivity{
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("name",  FB_User.getDisplayName());
                                     user.put("email", FB_User.getEmail());
-                                    user.put("isTeacher", false);
+                                    user.put("isTeacher", isTeacher);
 
-                                    FB_Firestore.collection("users").document(FB_User.getUid())
+                                    FB_Firestore.collection("users")
+                                            .document(FB_User.getUid())
                                             .set(user);
 
 
                                     Log.d(TuitionHelper.TAG_DEBUG, "New Firebase user successfully created");
-                                    Log.i(TuitionHelper.TAG_INFO, String.format(" \nUser\nName:\t%s\nEmail:\t%s\nUID:\t%s", FB_User.getDisplayName(), FB_User.getEmail(), FB_User.getUid()));
+                                    Log.i(TuitionHelper.TAG_INFO, String.format(" \nUser\nName:\t\t%s\nEmail:\t\t%s\nUID:\t\t%s\nIs tutor:\t%s", FB_User.getDisplayName(), FB_User.getEmail(), FB_User.getUid(), isTeacher));
 
 
                                     BT_signUp.setClickable(true);
-
-                                    MainActivityIntent.putExtra("Email", email);
-                                    MainActivityIntent.putExtra("Password", password);
 
                                     startActivity(MainActivityIntent);
                                 }

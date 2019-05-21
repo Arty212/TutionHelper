@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,6 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignInActivity extends AppCompatActivity{
 
@@ -29,7 +32,10 @@ public class SignInActivity extends AppCompatActivity{
     private Button BT_signIn;
     private Button BT_signUp;
 
+    private ProgressBar progressBar;
+
     private Intent SignUpActivityIntent;
+    private Intent MainActivityIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -73,7 +79,10 @@ public class SignInActivity extends AppCompatActivity{
         BT_signIn = findViewById(R.id.SignInActivity_signInButton);
         BT_signUp = findViewById(R.id.SignInActivity_signUpButton);
 
+        progressBar = findViewById(R.id.SignInActivity_progressBar);
+
         SignUpActivityIntent = new Intent(this, SignUpActivity.class);
+        MainActivityIntent = new Intent(this, MainActivity.class);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -109,6 +118,9 @@ public class SignInActivity extends AppCompatActivity{
 
                     Log.d(TuitionHelper.TAG_FIREBASE, "Trying to sign in Firebase using email and password...");
 
+                    BT_signIn.setClickable(false);
+                    BT_signUp.setClickable(false);
+                    progressBar.setVisibility(View.VISIBLE);
 
                     FB_Auth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>(){
@@ -121,6 +133,21 @@ public class SignInActivity extends AppCompatActivity{
 
 
                                         FB_User = FB_Auth.getCurrentUser();
+                                        MainActivityIntent.putExtra("Display name", FB_User.getDisplayName());
+                                        FirebaseFirestore.getInstance().collection("users").document(FB_User.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task){
+
+                                                MainActivityIntent.putExtra("Is teacher", Boolean.parseBoolean(task.getResult().getData().get("isTeacher").toString()));
+
+                                            }
+                                        });
+
+                                        startActivity(MainActivityIntent);
+
+                                        BT_signIn.setClickable(true);
+                                        BT_signUp.setClickable(true);
+                                        progressBar.setVisibility(View.INVISIBLE);
 
 
                                         Log.i(TuitionHelper.TAG_FIREBASE, String.format("\nUser\nEmail: %s\nUID: %s", FB_User.getEmail(), FB_User.getUid()));
@@ -130,6 +157,9 @@ public class SignInActivity extends AppCompatActivity{
                                         TV_error.setText(R.string.sign_in_error_incorrect_credentials);
                                         TV_error.setVisibility(View.VISIBLE);
 
+                                        BT_signIn.setClickable(true);
+                                        BT_signUp.setClickable(true);
+                                        progressBar.setVisibility(View.INVISIBLE);
 
                                         Log.e(TuitionHelper.TAG_ERROR, "Sign in attempt failed");
 
@@ -139,8 +169,7 @@ public class SignInActivity extends AppCompatActivity{
 
                             });
 
-                }
-                else {
+                }else{
 
                     TV_error.setText(R.string.sign_in_error_fields_empty);
                     TV_error.setVisibility(View.VISIBLE);
