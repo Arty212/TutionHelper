@@ -1,6 +1,7 @@
 package skippie.tutionhelper;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,14 +16,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignInActivity extends AppCompatActivity{
 
     private FirebaseAuth FB_Auth;
-    private FirebaseUser FB_User;
+
+    private SharedPreferences sPref;
 
     private TextView TV_error;
 
@@ -37,10 +36,13 @@ public class SignInActivity extends AppCompatActivity{
     private Intent SignUpActivityIntent;
     private Intent MainActivityIntent;
 
+    private String email;
+    private String password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
-        Log.d(TuitionHelper.TAG_DEBUG, "Started creating SignInActivity...");
+        Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Started creating SignInActivity...");
 
 
         super.onCreate(savedInstanceState);
@@ -49,157 +51,139 @@ public class SignInActivity extends AppCompatActivity{
         initializeComponents();
 
 
-        Log.d(TuitionHelper.TAG_DEBUG, "Started initializing Firebase and it's components");
-
-
         FB_Auth = FirebaseAuth.getInstance();
 
 
-        Log.d(TuitionHelper.TAG_DEBUG, "Completed initializing Firebase");
+        Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "SignInActivity created successfully");
 
+    }
 
-        setOnListeners();
+    @Override
+    protected void onResume(){
+        super.onResume();
 
+        if(!email.isEmpty() && !password.isEmpty()){
 
-        Log.d(TuitionHelper.TAG_DEBUG, "SignInActivity created successfully");
+            FB_Auth.signInWithEmailAndPassword(email, password);
+
+            startActivity(MainActivityIntent);
+            finish();
+
+        }
 
     }
 
     private void initializeComponents(){
 
-        Log.d(TuitionHelper.TAG_DEBUG, "Started initializing Buttons and EditTexts...");
+        Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Initializing components...");
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        sPref = getSharedPreferences(TuitionHelper.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
 
         TV_error = findViewById(R.id.SignInActivity_errorTextView);
 
-        ET_email = findViewById(R.id.SignInActivity_usernameEmailEditText);
+        ET_email = findViewById(R.id.SignInActivity_UsernameEmailEditText);
         ET_password = findViewById(R.id.SignInActivity_passwordEditText);
 
         BT_signIn = findViewById(R.id.SignInActivity_signInButton);
         BT_signUp = findViewById(R.id.SignInActivity_signUpButton);
 
-        progressBar = findViewById(R.id.SignInActivity_progressBar);
+        progressBar = findViewById(R.id.SignInActivity_ProgressBar);
 
         SignUpActivityIntent = new Intent(this, SignUpActivity.class);
+
         MainActivityIntent = new Intent(this, MainActivity.class);
+        MainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        Log.d(TuitionHelper.TAG_DEBUG, "Completed initializing Buttons and EditTexts");
+        email = sPref.getString(TuitionHelper.EMAIL, "");
+        password = sPref.getString(TuitionHelper.PASSWORD, "");
 
     }
 
-    //TODO: create onClick logic for buttons
 
-    private void setOnListeners(){
-
-        Log.d(TuitionHelper.TAG_DEBUG, "Started setting Buttons on click listeners...");
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        //Sign In button click listener
-        BT_signIn.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v){
-
-                Log.d(TuitionHelper.TAG_DEBUG, "Sign in button clicked");
+    public void SignInButton_ClickListener(View view){
+        Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "SignInActivity_SignInButton has been clicked");
 
 
-                TV_error.setVisibility(View.INVISIBLE); //Resetting visibility of TextView on each click
+        TV_error.setVisibility(View.INVISIBLE);
 
-                String email = ET_email.getText().toString();
-                String password = ET_password.getText().toString();
+        email = ET_email.getText().toString();
+        password = ET_password.getText().toString();
 
-                Log.d(TuitionHelper.TAG_DEBUG, "Checking fields...");
-
-                if(!email.isEmpty() && !password.isEmpty()){
-
-                    Log.d(TuitionHelper.TAG_FIREBASE, "Trying to sign in Firebase using email and password...");
-
-                    BT_signIn.setClickable(false);
-                    BT_signUp.setClickable(false);
-                    progressBar.setVisibility(View.VISIBLE);
-
-                    FB_Auth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>(){
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task){
-
-                                    if(task.isSuccessful()){
-
-                                        Log.d(TuitionHelper.TAG_FIREBASE, "Signed in Firebase successfully");
+        if(!email.isEmpty() && !password.isEmpty()){
+            Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Attempting to sign in Firebase...");
 
 
-                                        FB_User = FB_Auth.getCurrentUser();
-                                        MainActivityIntent.putExtra("Display name", FB_User.getDisplayName());
-                                        FirebaseFirestore.getInstance().collection("users").document(FB_User.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task){
+            BT_signIn.setClickable(false);
+            BT_signUp.setClickable(false);
 
-                                                MainActivityIntent.putExtra("Is teacher", Boolean.parseBoolean(task.getResult().getData().get("isTeacher").toString()));
+            ET_email.setClickable(false);
+            ET_password.setClickable(false);
 
-                                            }
-                                        });
-
-                                        startActivity(MainActivityIntent);
-
-                                        BT_signIn.setClickable(true);
-                                        BT_signUp.setClickable(true);
-                                        progressBar.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
 
 
-                                        Log.i(TuitionHelper.TAG_FIREBASE, String.format("\nUser\nEmail: %s\nUID: %s", FB_User.getEmail(), FB_User.getUid()));
-
-                                    }else{
-
-                                        TV_error.setText(R.string.sign_in_error_incorrect_credentials);
-                                        TV_error.setVisibility(View.VISIBLE);
-
-                                        BT_signIn.setClickable(true);
-                                        BT_signUp.setClickable(true);
-                                        progressBar.setVisibility(View.INVISIBLE);
-
-                                        Log.e(TuitionHelper.TAG_ERROR, "Sign in attempt failed");
-
-                                    }
-
-                                }
-
-                            });
-
-                }else{
-
-                    TV_error.setText(R.string.sign_in_error_fields_empty);
-                    TV_error.setVisibility(View.VISIBLE);
+            FB_Auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>(){
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task){
+                            if(task.isSuccessful()){
+                                Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Signed in Firebase successfully");
 
 
-                    Log.e(TuitionHelper.TAG_ERROR, "Field is empty, sign in attempt rejected");
+                                sPref.edit()
+                                        .putString(TuitionHelper.EMAIL, email)
+                                        .putString(TuitionHelper.PASSWORD, password)
+                                        .apply();
 
-                }
+                                startActivity(MainActivityIntent);
 
-            }
 
-        });
+                                BT_signIn.setClickable(true);
+                                BT_signUp.setClickable(true);
 
-        //Sign up button click listener
-        BT_signUp.setOnClickListener(new View.OnClickListener(){
+                                ET_email.setClickable(true);
+                                ET_password.setClickable(true);
 
-            @Override
-            public void onClick(View v){
+                                progressBar.setVisibility(View.INVISIBLE);
 
-                Log.d(TuitionHelper.TAG_DEBUG, "Sign up button clicked");
 
-                startActivity(SignUpActivityIntent);
+                                finish();
+                            }
+                            else{
+                                Log.e(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Sign in attempt failed");
 
-            }
 
-        });
+                                TV_error.setText(R.string.sign_in_error_incorrect_credentials);
+                                TV_error.setVisibility(View.VISIBLE);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+                                BT_signIn.setClickable(true);
+                                BT_signUp.setClickable(true);
 
-        Log.d(TuitionHelper.TAG_DEBUG, "Completed setting Buttons on click listeners");
+                                ET_email.setClickable(true);
+                                ET_password.setClickable(true);
+
+                                progressBar.setVisibility(View.INVISIBLE);
+
+                            }
+                        }
+                    });
+        }else{
+            Log.e(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Field is empty, sign in attempt rejected");
+
+
+            TV_error.setText(R.string.sign_in_error_fields_empty);
+            TV_error.setVisibility(View.VISIBLE);
+
+        }
+    }
+
+
+    public void SignUpButton_ClickListener(View view){
+        Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Sign up button clicked");
+
+
+        startActivity(SignUpActivityIntent);
 
     }
 

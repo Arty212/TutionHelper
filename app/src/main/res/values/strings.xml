@@ -18,4 +18,7 @@
     <string name="sign_up_error_unable_to_complete">Unable to complete operation</string>
     <string name="sign_up_error_type_is_not_chosen">Please choose your account type</string>
 
+    <string name="main_menu_contacts_button">Contacts</string>
+    <string name="main_menu_search_button">Search</string>
+    <string name="main_menu_tasks_button">Tasks</string>
 </resources>

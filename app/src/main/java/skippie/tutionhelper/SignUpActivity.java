@@ -26,8 +26,6 @@ public class SignUpActivity extends AppCompatActivity{
 
     private Intent MainActivityIntent;
 
-    private boolean isTeacher;
-
     private FirebaseAuth FB_Auth;
     private FirebaseUser FB_User;
     private FirebaseFirestore FB_Firestore;
@@ -43,143 +41,53 @@ public class SignUpActivity extends AppCompatActivity{
     private RadioButton RB_student;
     private RadioButton RB_tutor;
 
+    private boolean isTeacher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
-        Log.d(TuitionHelper.TAG_DEBUG, "Started creating SignUpActivity...");
+        Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Started creating SignUpActivity...");
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        initializeFirebase();
-
         initializeComponents();
 
-        setOnListeners();
-
-        Log.d(TuitionHelper.TAG_DEBUG, "Completed creating SignUpActivity");
+        Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Completed creating SignUpActivity");
     }
 
-    private void initializeFirebase(){
 
-        Log.d(TuitionHelper.TAG_FIREBASE, "Started initializing Firebase and it's components");
+    private void initializeComponents(){
+        Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Initializing components...");
 
+
+        MainActivityIntent = new Intent(this, MainActivity.class);
+        MainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        TV_error = findViewById(R.id.SignUpActivity_ErrorTextView);
+
+        ET_name = findViewById(R.id.SignUpActivity_UsernameEditText);
+        ET_email = findViewById(R.id.SignUpActivity_EmailEditText);
+        ET_password = findViewById(R.id.SignUpActivity_PasswordEditText);
+
+        BT_signUp = findViewById(R.id.SignUpActivity_SignUpButton);
+
+        RB_student = findViewById(R.id.SignUpActivity_StudentRadioButton);
+        RB_tutor = findViewById(R.id.SignUpActivity_TutorRadioButton);
 
         FB_Auth = FirebaseAuth.getInstance();
         FB_User = FB_Auth.getCurrentUser();
         FB_Firestore = FirebaseFirestore.getInstance();
-
-
-        Log.d(TuitionHelper.TAG_FIREBASE, "Completed initializing Firebase and it's components");
     }
 
-    private void initializeComponents(){
-
-        Log.d(TuitionHelper.TAG_DEBUG, "Started initializing components..");
-
-        MainActivityIntent = new Intent(this, MainActivity.class);
-
-        TV_error = findViewById(R.id.SignUpActivity_errorTextView);
-
-        ET_name = findViewById(R.id.SignUpActivity_usernameEditText);
-        ET_email = findViewById(R.id.SignUpActivity_emailEditText);
-        ET_password = findViewById(R.id.SignUpActivity_passwordEditText);
-
-        BT_signUp = findViewById(R.id.SignUpActivity_signUpButton);
-
-        RB_student = findViewById(R.id.SignUpActivity_studentRadioButton);
-        RB_tutor = findViewById(R.id.SignUpActivity_tutorRadioButton);
-
-
-        Log.d(TuitionHelper.TAG_DEBUG, "Completed initializing components");
-    }
-
-    private void setOnListeners(){
-
-        Log.d(TuitionHelper.TAG_DEBUG, "Started setting buttons on listeners...");
-
-
-        BT_signUp.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v){
-
-                Log.d(TuitionHelper.TAG_DEBUG, "Sign up button clicked");
-
-
-                if(RB_student.isChecked())
-                    isTeacher = false;
-                if(RB_tutor.isChecked())
-                    isTeacher = true;
-
-                TV_error.setVisibility(View.INVISIBLE);
-
-                String name = ET_name.getText().toString();
-                String email = ET_email.getText().toString();
-                String password = ET_password.getText().toString();
-
-                if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && password.length() >= 6 && password.length() <= 12 && (RB_student.isChecked() || RB_tutor.isChecked())){
-
-                    BT_signUp.setClickable(false);
-
-                    tryCreateUserWithEmailAndPassword(email, password, name, isTeacher);
-
-                }
-                else if(name.isEmpty() || email.isEmpty() || password.isEmpty()){
-
-                    TV_error.setText(R.string.sign_in_error_fields_empty);
-                    TV_error.setVisibility(View.VISIBLE);
-
-
-                    Log.e(TuitionHelper.TAG_ERROR, "One or more fields are empty, sign up attempt rejected");
-
-                }
-                else if(!(RB_student.isChecked() || RB_tutor.isChecked())){
-
-                    TV_error.setText(R.string.sign_up_error_type_is_not_chosen);
-                    TV_error.setVisibility(View.VISIBLE);
-
-
-                    Log.e(TuitionHelper.TAG_ERROR, "User type is not chosen, sign up attempt rejected");
-                }
-                else{
-
-                    TV_error.setText(R.string.sign_up_error_password_illegal_size);
-                    TV_error.setVisibility(View.VISIBLE);
-
-
-                    Log.e(TuitionHelper.TAG_ERROR, "Illegal password length, sign up attempt rejected");
-
-                }
-
-            }
-
-        });
-
-        RB_tutor.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                isTeacher = true;
-            }
-        });
-
-        RB_student.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                isTeacher = false;
-            }
-        });
-
-
-    }
 
     private void tryCreateUserWithEmailAndPassword(final String email, final String password, final String displayName, final boolean isTeacher){
         FB_Auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(@NonNull Task<AuthResult> task){
 
-                Log.d(TuitionHelper.TAG_DEBUG, "Trying to create a new Firebase user...");
+                Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Trying to create a new Firebase user...");
 
 
                 if(task.isSuccessful()){
@@ -192,8 +100,8 @@ public class SignUpActivity extends AppCompatActivity{
                                 public void onComplete(@NonNull Task<Void> task){
 
                                     Map<String, Object> user = new HashMap<>();
-                                    user.put("name",  FB_User.getDisplayName());
-                                    user.put("email", FB_User.getEmail());
+                                    user.put("name",  displayName);
+                                    user.put("email", email);
                                     user.put("isTeacher", isTeacher);
 
                                     FB_Firestore.collection("users")
@@ -201,13 +109,21 @@ public class SignUpActivity extends AppCompatActivity{
                                             .set(user);
 
 
-                                    Log.d(TuitionHelper.TAG_DEBUG, "New Firebase user successfully created");
-                                    Log.i(TuitionHelper.TAG_INFO, String.format(" \nUser\nName:\t\t%s\nEmail:\t\t%s\nUID:\t\t%s\nIs tutor:\t%s", FB_User.getDisplayName(), FB_User.getEmail(), FB_User.getUid(), isTeacher));
+                                    Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "New Firebase user successfully created");
+                                    Log.i(TuitionHelper.TAG_SIGN_UP_ACTIVITY, String.format(" \nUser\nName:\t\t%s\nEmail:\t\t%s\nUID:\t\t%s\nIs tutor:\t%s", FB_User.getDisplayName(), FB_User.getEmail(), FB_User.getUid(), isTeacher));
 
+                                    startActivity(MainActivityIntent);
+
+                                    ET_name.setClickable(true);
+                                    ET_email.setClickable(true);
+                                    ET_password.setClickable(true);
 
                                     BT_signUp.setClickable(true);
 
-                                    startActivity(MainActivityIntent);
+                                    RB_tutor.setClickable(true);
+                                    RB_student.setClickable(true);
+
+                                    finish();
                                 }
                             });
 
@@ -216,19 +132,98 @@ public class SignUpActivity extends AppCompatActivity{
                 }
                 else{
 
-                    TV_error.setText(R.string.sign_up_error_unable_to_complete);
+                    Log.e(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Failed to create new Firebase user");
+
+
+                    TV_error.setText(R.string.sign_in_error_incorrect_credentials);
                     TV_error.setVisibility(View.VISIBLE);
+
+                    ET_name.setClickable(true);
+                    ET_email.setClickable(true);
+                    ET_password.setClickable(true);
 
                     BT_signUp.setClickable(true);
 
-
-                    Log.e(TuitionHelper.TAG_FIREBASE, "Failed to create new Firebase user");
+                    RB_tutor.setClickable(true);
+                    RB_student.setClickable(true);
 
                 }
 
             }
 
         });
+
+    }
+
+
+    public void SignUpButton_ClickListener(View view){
+
+        Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "SignUpActivity_SignUpButton button has been clicked");
+
+
+        if(RB_student.isChecked())
+            isTeacher = false;
+        if(RB_tutor.isChecked())
+            isTeacher = true;
+
+
+        TV_error.setVisibility(View.INVISIBLE);
+
+        ET_name.setClickable(true);
+        ET_email.setClickable(true);
+        ET_password.setClickable(true);
+
+        BT_signUp.setClickable(true);
+
+        RB_tutor.setClickable(true);
+        RB_student.setClickable(true);
+
+
+        String name = ET_name.getText().toString();
+        String email = ET_email.getText().toString();
+        String password = ET_password.getText().toString();
+
+        if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && password.length() >= 6 && password.length() <= 12 && (RB_student.isChecked() || RB_tutor.isChecked())){
+
+            ET_name.setClickable(false);
+            ET_email.setClickable(false);
+            ET_password.setClickable(false);
+
+            BT_signUp.setClickable(false);
+
+            RB_tutor.setClickable(false);
+            RB_student.setClickable(false);
+
+
+            tryCreateUserWithEmailAndPassword(email, password, name, isTeacher);
+
+        }
+        else if(name.isEmpty() || email.isEmpty() || password.isEmpty()){
+
+            Log.e(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "One or more fields are empty, sign up attempt rejected");
+
+
+            TV_error.setText(R.string.sign_in_error_fields_empty);
+            TV_error.setVisibility(View.VISIBLE);
+
+        }//"Empty fields" error handler
+        else if(!(RB_student.isChecked() || RB_tutor.isChecked())){
+
+            Log.e(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "User type is not chosen, sign up attempt rejected");
+
+            TV_error.setText(R.string.sign_up_error_type_is_not_chosen);
+            TV_error.setVisibility(View.VISIBLE);
+
+        }//"User's type is not chosen" error handler
+        else{
+
+            Log.e(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Illegal password length, sign up attempt rejected");
+
+
+            TV_error.setText(R.string.sign_up_error_password_illegal_size);
+            TV_error.setVisibility(View.VISIBLE);
+
+        }//"Illegal password length" error handler
 
     }
 

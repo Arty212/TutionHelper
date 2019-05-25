@@ -2,11 +2,12 @@ package skippie.tutionhelper;
 
 public class TuitionHelper{
 
-    public static final String TAG_DEBUG = "TuitionHelper Debug";
-    public static final String TAG_FIREBASE = "TuitionHelper Firebase";
-    public static final String TAG_INFO = "TuitionHelper Info";
-    public static final String TAG_ERROR = "TuitionHelper Error";
+    public static final String TAG_SIGN_IN_ACTIVITY = "TH/:SignInActivity";
+    public static final String TAG_SIGN_UP_ACTIVITY = "TH/:SignUpActivity";
+    public static final String TAG_MAIN_ACTIVITY = "TH/:MainActivity";
+    public static final String SHARED_PREFERENCES_NAME = "sPreferences";
 
-    public static final String EXTRA_EMAIL = "TuitionHelper EmailExtra";
-    public static final String EXTRA_PASSWORD = "TuitionHelper PasswordExtra";
+    public static final String EMAIL = "TUITION_HELPER_EMAIL";
+    public static final String PASSWORD = "TUITION_HELPER_PASSWORD";
+
 }

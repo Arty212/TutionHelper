@@ -25,7 +25,7 @@
         android:weightSum="5">
 
         <EditText
-            android:id="@+id/SignUpActivity_usernameEditText"
+            android:id="@+id/SignUpActivity_UsernameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
@@ -39,7 +39,7 @@
             android:visibility="visible" />
 
         <EditText
-            android:id="@+id/SignUpActivity_emailEditText"
+            android:id="@+id/SignUpActivity_EmailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
@@ -53,7 +53,7 @@
             android:visibility="visible" />
 
         <EditText
-            android:id="@+id/SignUpActivity_passwordEditText"
+            android:id="@+id/SignUpActivity_PasswordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
@@ -73,14 +73,14 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/SignUpActivity_studentRadioButton"
+                android:id="@+id/SignUpActivity_StudentRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/student_string" />
 
             <RadioButton
-                android:id="@+id/SignUpActivity_tutorRadioButton"
+                android:id="@+id/SignUpActivity_TutorRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -88,7 +88,7 @@
         </RadioGroup>
 
         <TextView
-            android:id="@+id/SignUpActivity_errorTextView"
+            android:id="@+id/SignUpActivity_ErrorTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -100,7 +100,7 @@
             android:visibility="invisible" />
 
         <Button
-            android:id="@+id/SignUpActivity_signUpButton"
+            android:id="@+id/SignUpActivity_SignUpButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="64dp"
@@ -109,6 +109,7 @@
             android:layout_marginBottom="8dp"
             android:backgroundTintMode="src_atop"
             android:longClickable="false"
+            android:onClick="SignUpButton_ClickListener"
             android:text="@string/sign_up_button_string"
             android:visibility="visible" />
 
