@@ -5,28 +5,30 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder> {
-
+    
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView name;
-        public TextView aInfo;
-        public ImageView userImage;
+        private ImageView IV_userAvatar;
+        
+        private TextView TV_userName;
+        private TextView TV_userAInfo;
 
         public MyViewHolder(View view){
             super(view);
+            
+            IV_userAvatar = view.findViewById(R.id.AdapterListItem_UserAvatarImageView);
     
-            name = view.findViewById(R.id.AdapterListItem_UserNameTextView);
-            aInfo = view.findViewById(R.id.AdapterListItem_UserAddInfo);
-            userImage = view.findViewById(R.id.AdapterListItem_UserAvatarImageView);
+            TV_userName = view.findViewById(R.id.AdapterListItem_UserNameTextView);
+            TV_userAInfo = view.findViewById(R.id.AdapterListItem_UserAddInfo);
         }
+        
     }
     
-    public SearchAdapter() {
+    public SearchAdapter(String userAvatarEncoded, String userName, String userAInfo) {
     
     }
 
