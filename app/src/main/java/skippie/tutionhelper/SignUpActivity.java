@@ -41,8 +41,6 @@ public class SignUpActivity extends AppCompatActivity{
     private RadioButton RB_student;
     private RadioButton RB_tutor;
 
-    private boolean isTeacher;
-
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -82,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity{
     }
 
 
-    private void tryCreateUserWithEmailAndPassword(final String email, final String password, final String displayName, final boolean isTeacher){
+    private void tryCreateUserWithEmailAndPassword(final String email, final String password, final String displayName){
         FB_Auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(@NonNull Task<AuthResult> task){
@@ -102,7 +100,6 @@ public class SignUpActivity extends AppCompatActivity{
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("name",  displayName);
                                     user.put("email", email);
-                                    user.put("isTeacher", isTeacher);
 
                                     FB_Firestore.collection("users")
                                             .document(FB_User.getUid())
@@ -110,7 +107,7 @@ public class SignUpActivity extends AppCompatActivity{
 
 
                                     Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "New Firebase user successfully created");
-                                    Log.i(TuitionHelper.TAG_SIGN_UP_ACTIVITY, String.format(" \nUser\nName:\t\t%s\nEmail:\t\t%s\nUID:\t\t%s\nIs tutor:\t%s", FB_User.getDisplayName(), FB_User.getEmail(), FB_User.getUid(), isTeacher));
+                                    Log.i(TuitionHelper.TAG_SIGN_UP_ACTIVITY, String.format(" \nUser\nName:\t\t%s\nEmail:\t\t%s\nUID:\t\t%s\n", FB_User.getDisplayName(), FB_User.getEmail(), FB_User.getUid()));
 
                                     startActivity(MainActivityIntent);
 
@@ -161,12 +158,6 @@ public class SignUpActivity extends AppCompatActivity{
         Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "SignUpActivity_SignUpButton button has been clicked");
 
 
-        if(RB_student.isChecked())
-            isTeacher = false;
-        if(RB_tutor.isChecked())
-            isTeacher = true;
-
-
         TV_error.setVisibility(View.INVISIBLE);
 
         ET_name.setClickable(true);
@@ -195,7 +186,7 @@ public class SignUpActivity extends AppCompatActivity{
             RB_student.setClickable(false);
 
 
-            tryCreateUserWithEmailAndPassword(email, password, name, isTeacher);
+            tryCreateUserWithEmailAndPassword(email, password, name);
 
         }
         else if(name.isEmpty() || email.isEmpty() || password.isEmpty()){

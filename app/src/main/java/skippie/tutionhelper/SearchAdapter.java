@@ -1,5 +1,6 @@
 package skippie.tutionhelper;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,8 +10,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder> {
-    
+
+    private List<RecyclerViewItem> itemsList;
+    private Context context;
+
+    public SearchAdapter(List<RecyclerViewItem> itemsList, Context context) {
+        this.itemsList = itemsList;
+        this.context = context;
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private ImageView IV_userAvatar;
         
@@ -27,10 +38,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         }
         
     }
-    
-    public SearchAdapter(String userAvatarEncoded, String userName, String userAInfo) {
-    
-    }
 
     @NonNull
     @Override
@@ -38,20 +45,23 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_recycler_view_item, viewGroup, false);
         
-        MyViewHolder myViewHolder = new MyViewHolder(view);
-        
-        return myViewHolder;
+        return new MyViewHolder(view);
         
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
+        RecyclerViewItem item = itemsList.get(i);
+
+        myViewHolder.IV_userAvatar.setImageBitmap(RecyclerViewItem.getImageBitmap());
+        myViewHolder.TV_userName.setText(RecyclerViewItem.getUserName());
+        myViewHolder.TV_userAInfo.setText(RecyclerViewItem.getUserAInfo());
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return itemsList.size();
     }
 
 }
