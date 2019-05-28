@@ -1,6 +1,8 @@
 package skippie.tutionhelper;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,28 +25,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity{
-
-    private Intent MainActivityIntent;
-
+    
+    //Constants
+    private static final String TAG = "TH/:SignUpActivity";
+    
+    
+    //Firebase
     private FirebaseAuth FB_Auth;
     private FirebaseUser FB_User;
     private FirebaseFirestore FB_Firestore;
-
+    
+    
+    //Views
     private TextView TV_error;
-
+    
     private EditText ET_name;
     private EditText ET_email;
     private EditText ET_password;
-
+    
     private Button BT_signUp;
+    
+    
+    //Variables
+    private Intent MainActivityIntent;
+    private String encodedAvatar;
 
-    private RadioButton RB_student;
-    private RadioButton RB_tutor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
-        Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Started creating SignUpActivity...");
+        Log.d(TAG, "Started creating SignUpActivity...");
 
 
         super.onCreate(savedInstanceState);
@@ -52,12 +62,12 @@ public class SignUpActivity extends AppCompatActivity{
 
         initializeComponents();
 
-        Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Completed creating SignUpActivity");
+        Log.d(TAG, "Completed creating SignUpActivity");
     }
 
 
     private void initializeComponents(){
-        Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Initializing components...");
+        Log.d(TAG, "Initializing components...");
 
 
         MainActivityIntent = new Intent(this, MainActivity.class);
@@ -71,12 +81,11 @@ public class SignUpActivity extends AppCompatActivity{
 
         BT_signUp = findViewById(R.id.SignUpActivity_SignUpButton);
 
-        RB_student = findViewById(R.id.SignUpActivity_StudentRadioButton);
-        RB_tutor = findViewById(R.id.SignUpActivity_TutorRadioButton);
-
         FB_Auth = FirebaseAuth.getInstance();
         FB_User = FB_Auth.getCurrentUser();
         FB_Firestore = FirebaseFirestore.getInstance();
+    
+        encodedAvatar = TuitionHelper.BitMapToString(BitmapFactory.decodeResource(this.getResources(), R.drawable.avatar_drawable));
     }
 
 
@@ -85,29 +94,31 @@ public class SignUpActivity extends AppCompatActivity{
             @Override
             public void onComplete(@NonNull Task<AuthResult> task){
 
-                Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Trying to create a new Firebase user...");
+                Log.d(TAG, "Trying to create a new Firebase user...");
 
 
                 if(task.isSuccessful()){
 
                     FB_User = FirebaseAuth.getInstance().getCurrentUser();
-
+                    
                     FB_User.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(displayName).build())
                             .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<Void>(){
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task){
 
                                     Map<String, Object> user = new HashMap<>();
-                                    user.put("name",  displayName);
-                                    user.put("email", email);
+                                    user.put("Name",  displayName);
+                                    user.put("Email", email);
+                                    user.put("UID", FB_User.getUid());
+                                    user.put("Avatar", encodedAvatar);
 
                                     FB_Firestore.collection("users")
                                             .document(FB_User.getUid())
                                             .set(user);
 
 
-                                    Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "New Firebase user successfully created");
-                                    Log.i(TuitionHelper.TAG_SIGN_UP_ACTIVITY, String.format(" \nUser\nName:\t\t%s\nEmail:\t\t%s\nUID:\t\t%s\n", FB_User.getDisplayName(), FB_User.getEmail(), FB_User.getUid()));
+                                    Log.d(TAG, "New Firebase user successfully created");
+                                    Log.i(TAG, String.format(" \nUser\nName:\t\t%s\nEmail:\t\t%s\nUID:\t\t%s\n", FB_User.getDisplayName(), FB_User.getEmail(), FB_User.getUid()));
 
                                     startActivity(MainActivityIntent);
 
@@ -116,10 +127,6 @@ public class SignUpActivity extends AppCompatActivity{
                                     ET_password.setClickable(true);
 
                                     BT_signUp.setClickable(true);
-
-                                    RB_tutor.setClickable(true);
-                                    RB_student.setClickable(true);
-
                                     finish();
                                 }
                             });
@@ -129,10 +136,10 @@ public class SignUpActivity extends AppCompatActivity{
                 }
                 else{
 
-                    Log.e(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Failed to create new Firebase user");
+                    Log.e(TAG, "Failed to create new Firebase user");
 
 
-                    TV_error.setText(R.string.sign_in_error_incorrect_credentials);
+                    TV_error.setText("User with this email already exists");
                     TV_error.setVisibility(View.VISIBLE);
 
                     ET_name.setClickable(true);
@@ -140,9 +147,6 @@ public class SignUpActivity extends AppCompatActivity{
                     ET_password.setClickable(true);
 
                     BT_signUp.setClickable(true);
-
-                    RB_tutor.setClickable(true);
-                    RB_student.setClickable(true);
 
                 }
 
@@ -155,8 +159,7 @@ public class SignUpActivity extends AppCompatActivity{
 
     public void SignUpButton_ClickListener(View view){
 
-        Log.d(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "SignUpActivity_SignUpButton button has been clicked");
-
+        Log.d(TAG, "SignUpActivity_SignUpButton button has been clicked");
 
         TV_error.setVisibility(View.INVISIBLE);
 
@@ -166,15 +169,13 @@ public class SignUpActivity extends AppCompatActivity{
 
         BT_signUp.setClickable(true);
 
-        RB_tutor.setClickable(true);
-        RB_student.setClickable(true);
 
 
         String name = ET_name.getText().toString();
         String email = ET_email.getText().toString();
         String password = ET_password.getText().toString();
 
-        if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && password.length() >= 6 && password.length() <= 12 && (RB_student.isChecked() || RB_tutor.isChecked())){
+        if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty() && password.length() >= 6 && password.length() <= 12){
 
             ET_name.setClickable(false);
             ET_email.setClickable(false);
@@ -182,8 +183,6 @@ public class SignUpActivity extends AppCompatActivity{
 
             BT_signUp.setClickable(false);
 
-            RB_tutor.setClickable(false);
-            RB_student.setClickable(false);
 
 
             tryCreateUserWithEmailAndPassword(email, password, name);
@@ -191,24 +190,16 @@ public class SignUpActivity extends AppCompatActivity{
         }
         else if(name.isEmpty() || email.isEmpty() || password.isEmpty()){
 
-            Log.e(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "One or more fields are empty, sign up attempt rejected");
+            Log.e(TAG, "One or more fields are empty, sign up attempt rejected");
 
 
             TV_error.setText(R.string.sign_in_error_fields_empty);
             TV_error.setVisibility(View.VISIBLE);
 
         }//"Empty fields" error handler
-        else if(!(RB_student.isChecked() || RB_tutor.isChecked())){
-
-            Log.e(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "User type is not chosen, sign up attempt rejected");
-
-            TV_error.setText(R.string.sign_up_error_type_is_not_chosen);
-            TV_error.setVisibility(View.VISIBLE);
-
-        }//"User's type is not chosen" error handler
         else{
 
-            Log.e(TuitionHelper.TAG_SIGN_UP_ACTIVITY, "Illegal password length, sign up attempt rejected");
+            Log.e(TAG, "Illegal password length, sign up attempt rejected");
 
 
             TV_error.setText(R.string.sign_up_error_password_illegal_size);

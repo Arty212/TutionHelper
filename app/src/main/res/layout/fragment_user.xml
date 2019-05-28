@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="auto"
+    android:weightSum="4">
+
+    <ImageView
+        android:id="@+id/FragmentUser_avatar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/avatar_drawable" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/FragmentUser_displayName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:padding="8dp"
+            android:text="hg"
+            android:textAlignment="viewStart"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

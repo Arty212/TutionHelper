@@ -21,4 +21,10 @@
     <string name="main_menu_contacts_button">Contacts</string>
     <string name="main_menu_search_button">Search</string>
     <string name="main_menu_tasks_button">Tasks</string>
+    <string name="main_menu_additional_info_hint">Add some information by clicking on your avatar.</string>
+
+    <string name="menu_contacts">Contacts</string>
+    <string name="menu_tasks">Tasks</string>
+    <string name="menu_search">Search</string>
+
 </resources>

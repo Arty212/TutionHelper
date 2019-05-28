@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp"
-    android:weightSum="12">
+    android:weightSum="11">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         <EditText
             android:id="@+id/SearchFragment_nameEditText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:ems="10"
             android:fadingEdge="vertical"
             android:inputType="textPersonName"
@@ -28,9 +28,9 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/SearchFragment_UsersList"
+        android:id="@+id/SearchFragment_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="11"
-        android:padding="8dp" />
+        android:layout_weight="10" />
+
 </LinearLayout>
