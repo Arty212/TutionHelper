@@ -18,31 +18,44 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SignInActivity extends AppCompatActivity{
-
+    
+    //Constants
+    private static final String TAG = "TH/:SignInActivity";
+    public static final String SHARED_PREFERENCES_NAME = "sPreferences";
+    public static final String EMAIL = "TUITION_HELPER_EMAIL";
+    public static final String PASSWORD = "TUITION_HELPER_PASSWORD";
+    
+    
+    //Firebase
     private FirebaseAuth FB_Auth;
 
-    private SharedPreferences sPref;
-
+    
+    //Views
     private TextView TV_error;
-
+    
     private EditText ET_email;
     private EditText ET_password;
-
+    
     private Button BT_signIn;
     private Button BT_signUp;
-
+    
     private ProgressBar progressBar;
-
+    
+    
+    //Variables
+    private SharedPreferences sPref;
+    
     private Intent SignUpActivityIntent;
     private Intent MainActivityIntent;
 
     private String email;
     private String password;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
-        Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Started creating SignInActivity...");
+        Log.d(TAG, "Started creating SignInActivity...");
 
 
         super.onCreate(savedInstanceState);
@@ -54,7 +67,7 @@ public class SignInActivity extends AppCompatActivity{
         FB_Auth = FirebaseAuth.getInstance();
 
 
-        Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "SignInActivity created successfully");
+        Log.d(TAG, "SignInActivity created successfully");
 
     }
 
@@ -63,22 +76,20 @@ public class SignInActivity extends AppCompatActivity{
         super.onResume();
 
         if(!email.isEmpty() && !password.isEmpty()){
-
-            FB_Auth.signInWithEmailAndPassword(email, password);
-
-            startActivity(MainActivityIntent);
-            finish();
-
+    
+            ET_email.setText(email);
+            ET_password.setText(password);
+            
         }
 
     }
 
     private void initializeComponents(){
 
-        Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Initializing components...");
+        Log.d(TAG, "Initializing components...");
 
 
-        sPref = getSharedPreferences(TuitionHelper.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        sPref = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE);
 
         TV_error = findViewById(R.id.SignInActivity_errorTextView);
 
@@ -95,14 +106,14 @@ public class SignInActivity extends AppCompatActivity{
         MainActivityIntent = new Intent(this, MainActivity.class);
         MainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        email = sPref.getString(TuitionHelper.EMAIL, "");
-        password = sPref.getString(TuitionHelper.PASSWORD, "");
+        email = sPref.getString(EMAIL, "");
+        password = sPref.getString(PASSWORD, "");
 
     }
 
 
     public void SignInButton_ClickListener(View view){
-        Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "SignInActivity_SignInButton has been clicked");
+        Log.d(TAG, "SignInActivity_SignInButton has been clicked");
 
 
         TV_error.setVisibility(View.INVISIBLE);
@@ -111,7 +122,7 @@ public class SignInActivity extends AppCompatActivity{
         password = ET_password.getText().toString();
 
         if(!email.isEmpty() && !password.isEmpty()){
-            Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Attempting to sign in Firebase...");
+            Log.d(TAG, "Attempting to sign in Firebase...");
 
 
             BT_signIn.setClickable(false);
@@ -128,13 +139,13 @@ public class SignInActivity extends AppCompatActivity{
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task){
                             if(task.isSuccessful()){
-                                Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Signed in Firebase successfully");
+                                Log.d(TAG, "Signed in Firebase successfully");
 
 
                                 sPref.edit()
-                                        .putString(TuitionHelper.EMAIL, email)
-                                        .putString(TuitionHelper.PASSWORD, password)
-                                        .apply();
+                                        .putString(EMAIL, email)
+                                        .putString(PASSWORD, password)
+                                        .commit();
 
                                 startActivity(MainActivityIntent);
 
@@ -151,7 +162,7 @@ public class SignInActivity extends AppCompatActivity{
                                 finish();
                             }
                             else{
-                                Log.e(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Sign in attempt failed");
+                                Log.e(TAG, "Sign in attempt failed");
 
 
                                 TV_error.setText(R.string.sign_in_error_incorrect_credentials);
@@ -169,7 +180,7 @@ public class SignInActivity extends AppCompatActivity{
                         }
                     });
         }else{
-            Log.e(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Field is empty, sign in attempt rejected");
+            Log.e(TAG, "Field is empty, sign in attempt rejected");
 
 
             TV_error.setText(R.string.sign_in_error_fields_empty);
@@ -180,7 +191,7 @@ public class SignInActivity extends AppCompatActivity{
 
 
     public void SignUpButton_ClickListener(View view){
-        Log.d(TuitionHelper.TAG_SIGN_IN_ACTIVITY, "Sign up button clicked");
+        Log.d(TAG, "Sign up button clicked");
 
 
         startActivity(SignUpActivityIntent);
