@@ -32,5 +32,7 @@
     <string name="edit_account_storage_button">Storage</string>
     <string name="edit_account_save_button">Save changes</string>
 
+    <string name="tasks_my_tasks_list">Tasks for you</string>
+    <string name="tasks_other_tasks_list">Task for your students</string>
 
 </resources>

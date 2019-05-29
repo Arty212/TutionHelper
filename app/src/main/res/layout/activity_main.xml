@@ -69,11 +69,12 @@
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/MainActivity_BottomNavigationView"
+        style="@style/Widget.Design.BottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         app:itemBackground="@color/colorAccent"
-        app:itemIconTint="@color/colorPrimaryDark"
+        app:itemIconTint="@color/colorPrimary"
         app:itemTextColor="@color/colorPrimaryDark"
         app:menu="@menu/menu_bottom_navigation" />
 

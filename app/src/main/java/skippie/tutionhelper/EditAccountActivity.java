@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -128,14 +129,29 @@ public class EditAccountActivity extends AppCompatActivity {
         }
     }
     
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Intent CameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(CameraIntent, 0);
+        } else {
+            Toast.makeText(getApplicationContext(), "This application needs permission to use a camera", Toast.LENGTH_LONG).show();
+        }
+    }
+    
     public void CameraButtonListener(View view){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-            
+                Toast.makeText(getApplicationContext(), "This application needs permission to use a camera", Toast.LENGTH_LONG).show();
+            }
+            else {
+                ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, 3);
             }
         }
-        Intent CameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(CameraIntent, 0);
+        else {
+            Intent CameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(CameraIntent, 0);
+        }
     }
     
     public void StorageButtonListener(View view) {
@@ -154,5 +170,7 @@ public class EditAccountActivity extends AppCompatActivity {
         document.put("AInfo", ET_AdditionalInfo.getText().toString());
     
         DB.collection("users").document(CurrentUID).update(document);
+        
+        finish();
     }
 }

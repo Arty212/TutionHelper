@@ -4,12 +4,14 @@
 
     <item
         android:id="@+id/action__contacts"
+        android:icon="@android:drawable/ic_menu_my_calendar"
         android:title="@string/menu_contacts" />
     <item
         android:id="@+id/action__tasks"
+        android:icon="@android:drawable/ic_menu_agenda"
         android:title="@string/menu_tasks" />
     <item
         android:id="@+id/action__search"
-        android:icon="@android:drawable/ic_search_category_default"
+        android:icon="@android:drawable/ic_menu_search"
         android:title="@string/menu_search" />
 </menu>

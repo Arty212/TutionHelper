@@ -2,6 +2,7 @@ package skippie.tutionhelper;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -74,7 +75,10 @@ public class MainActivity extends FragmentActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 try {
                     String encodedString = task.getResult().get("Avatar").toString();
+                    String AInfo = task.getResult().get("AInfo").toString();
+                    
                     IV_avatar.setImageBitmap(TuitionHelper.decodeStringToBitmap(encodedString));
+                    TV_additionalInfo.setText(AInfo);
                 }catch(Exception ignored){
                 
                 }
@@ -125,25 +129,29 @@ public class MainActivity extends FragmentActivity {
         
     }
     
-    public void ContactsButton_ClickListener(View view) {
-    
-    }
-    
-    public void SearchButton_ClickListener(View view) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.MainActivity_FragmentContainer, new SearchFragment())
-                .commit();
-    }
-    
-    public void TasksButton_ClickListeners(View view) {
-        
-    }
-    
     public void EditAccount_ClickListener(View view) {
         Intent EditAccountIntent = new Intent(this, EditAccountActivity.class);
         
-        startActivity(EditAccountIntent);
+        startActivityForResult(EditAccountIntent, 10);
     }
     
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        TV_username.setText(FB_User.getDisplayName());
+        FB_CurrUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                try {
+                    String encodedString = task.getResult().get("Avatar").toString();
+                    String AInfo = task.getResult().get("AInfo").toString();
+                
+                    IV_avatar.setImageBitmap(TuitionHelper.decodeStringToBitmap(encodedString));
+                    TV_additionalInfo.setText(AInfo);
+                }catch(Exception ignored){
+                
+                }
+            
+            }
+        });
+    }
 }
