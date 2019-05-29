@@ -66,27 +66,6 @@
             android:textColor="#000000"
             android:visibility="visible" />
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/SignUpActivity_StudentRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/student_string" />
-
-            <RadioButton
-                android:id="@+id/SignUpActivity_TutorRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/tutor_string" />
-        </RadioGroup>
-
         <TextView
             android:id="@+id/SignUpActivity_ErrorTextView"
             android:layout_width="match_parent"

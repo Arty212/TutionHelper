@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,6 +112,8 @@ public class SignUpActivity extends AppCompatActivity{
                                     user.put("Email", email);
                                     user.put("UID", FB_User.getUid());
                                     user.put("Avatar", encodedAvatar);
+                                    user.put("AInfo", "");
+                                    user.put("Contacts", new ArrayList<String>());
 
                                     FB_Firestore.collection("users")
                                             .document(FB_User.getUid())
@@ -139,7 +142,7 @@ public class SignUpActivity extends AppCompatActivity{
                     Log.e(TAG, "Failed to create new Firebase user");
 
 
-                    TV_error.setText("User with this email already exists");
+                    TV_error.setText("Error occurred. Please try again later");
                     TV_error.setVisibility(View.VISIBLE);
 
                     ET_name.setClickable(true);

@@ -1,9 +1,16 @@
 package skippie.tutionhelper;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
@@ -25,7 +32,7 @@ public class TuitionHelper{
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
     
     
-        bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+        bitmap = Bitmap.createScaledBitmap(bitmap, 300, 400, true);
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         
         byte[] b = baos.toByteArray();

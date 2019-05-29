@@ -10,5 +10,6 @@
         android:title="@string/menu_tasks" />
     <item
         android:id="@+id/action__search"
+        android:icon="@android:drawable/ic_search_category_default"
         android:title="@string/menu_search" />
 </menu>

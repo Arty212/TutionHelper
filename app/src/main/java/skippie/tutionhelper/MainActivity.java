@@ -1,5 +1,6 @@
 package skippie.tutionhelper;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -137,6 +138,12 @@ public class MainActivity extends FragmentActivity {
     
     public void TasksButton_ClickListeners(View view) {
         
+    }
+    
+    public void EditAccount_ClickListener(View view) {
+        Intent EditAccountIntent = new Intent(this, EditAccountActivity.class);
+        
+        startActivity(EditAccountIntent);
     }
     
 }

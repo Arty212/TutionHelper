@@ -27,4 +27,10 @@
     <string name="menu_tasks">Tasks</string>
     <string name="menu_search">Search</string>
 
+    <string name="edit_account_ainfo_hint">You can write some information about yourself here</string>
+    <string name="edit_account_camera_button">Camera</string>
+    <string name="edit_account_storage_button">Storage</string>
+    <string name="edit_account_save_button">Save changes</string>
+
+
 </resources>
